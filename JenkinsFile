@@ -1,17 +1,36 @@
-pipeline {
+pipeline{
     agent any
-    
-    stages {
-        stage('Build Docker Image') {
-            steps {
-                sh 'docker build -t mon_image_docker:latest .'
+    tools {
+      maven 'maven'
+    }
+    environment {
+      DOCKER_TAG = getVersion()
+    }
+    stages{
+        stage('SCM'){
+            steps{
+                git credentialsId: 'github', 
+                    url: 'https://github.com/monadimustafa/jen-lab',
+                    branch: 'main'
             }
         }
         
-        stage('Start Docker Container') {
-            steps {
-                sh 'docker run -p 808-:8080 mon_image_docker:latest'
+        stage('Maven Build'){
+            steps{
+                sh "mvn clean package"
             }
         }
+        
+        stage('Docker Build'){
+            steps{
+                sh "docker build . -t mustaphaAppTodo:${DOCKER_TAG}   "
+            }
+        }
+        
     }
+}
+
+def getVersion(){
+    def commitHash = sh label: '', returnStdout: true, script: 'git rev-parse --short HEAD'
+    return commitHash
 }
