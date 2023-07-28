@@ -4,17 +4,16 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the source code from your GitHub repository
                 git url: 'https://github.com/monadimustafa/jen-lab', branch: 'main'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                // Build Docker image with the tag "votre-image"
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                        def dockerImage = docker.build("monadimustafa/AppTodoMustafa:${env.BUILD_NUMBER}")
+                        def dockerImage = docker.build("monadimustafa:${env.BUILD_NUMBER}")
+                        dockerImage.push()
                     }
                 }
             }
@@ -22,10 +21,9 @@ pipeline {
 
         stage('Run Docker Container') {
             steps {
-                // Run Docker container from the previously built image
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                        docker.image("monadimustafa/AppTodoMustafa:${env.BUILD_NUMBER}").run('--name mon-container -p 8086:8080 -d')
+                        docker.image("monadimustafa:${env.BUILD_NUMBER}").run('--name mon-container -p 8086:8080 -d')
                     }
                 }
             }
@@ -41,4 +39,3 @@ pipeline {
         }
     }
 }
-
