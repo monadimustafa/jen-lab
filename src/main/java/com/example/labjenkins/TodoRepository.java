@@ -1,4 +1,4 @@
-package com.example.exercice_cicd;
+package com.example.labjenkins;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

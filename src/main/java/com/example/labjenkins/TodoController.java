@@ -1,4 +1,4 @@
-package com.example.exercice_cicd;
+package com.example.labjenkins;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
