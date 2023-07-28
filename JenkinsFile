@@ -10,7 +10,7 @@ pipeline{
         stage('SCM'){
             steps{
                 git credentialsId: 'github', 
-                    url: 'https://github.com/monadimustafa/jen-lab',
+                    url: 'https://github.com/monadimustafa/jen-lab.git',
                     branch: 'main'
             }
         }
